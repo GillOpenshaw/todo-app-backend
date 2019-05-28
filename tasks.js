@@ -25,8 +25,8 @@ app.get("/tasks", function (request, response) {
   console.log(request);
   const username = request.query.username;
   response.json({
+    message: `Username ${username} is booking` 
     itinerary.map((itineraryList, index) => {
-      message: `Username ${username} is booking` 
       return itineraryList.title
     })
 
