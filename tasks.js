@@ -25,12 +25,9 @@ app.get("/tasks", function (request, response) {
   console.log(request);
   const username = request.query.username;
   response.json({
-    message: `Username ${username} is booking` 
-    itinerary.map((itineraryList, index) => {
-      return itineraryList.title
-    })
-
+    tasks: itinerary
   })
+
 }); // when called will receive object about request and object about response
 
 module.exports.handler = serverless(app);
