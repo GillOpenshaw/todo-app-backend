@@ -23,7 +23,6 @@ const itinerary = [
 
 app.get("/tasks", function (request, response) {
   console.log(request);
-  const username = request.query.username;
   response.json({
     tasks: itinerary
   })
