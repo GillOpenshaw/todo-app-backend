@@ -11,4 +11,9 @@ functions:
          path: tasks
          method: get
          cors: true
+# code to run offline 
+#In terminal type serverless offline  
+#Copy http address into browser and add /tasks to end of address
+plugins:
+ - serverless-offline
 
