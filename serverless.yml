@@ -11,6 +11,11 @@ functions:
          path: tasks
          method: get
          cors: true
+      - http:
+         path: tasks/{id}  # add a parameter to the end to select the id to e.g. 3 Parameter called id
+         method: delete  # will delete from the database
+         cors: true
+
 # code to run offline 
 #In terminal type serverless offline  
 #Copy http address into browser and add /tasks to end of address

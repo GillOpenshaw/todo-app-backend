@@ -24,11 +24,30 @@ app.get("/tasks", function (request, response) {
       // Use .status then sets status code but not response
       // Use .send then also sends an error message response
       response.send(500);
-    }
-    response.json({ tasks: result });  // returns database items to browser. EndPoint
+      // Otherwise, send the success response
+    } else {
+      response.json({ tasks: result });
+    } // returns database items to browser. EndPoint
   });
 }); // when called will receive object about request and object about response
+
+// access id with request.params.id linked with yml file
+app.delete("/tasks/:id", function (request, response) {
+  const taskId = request.params.id;
+  console.log(taskId);
+  // sanitise user input with the taskId
+  connection.query("DELETE FROM Tasks WHERE TaskId =  ?", [taskId], function (err, result, fields) {
+    if (err !== null) { 
+      console.log("Something wrong deleting tasks", err);
+      response.send(500);
+    } else {
+    response.send("Item Deleted")
+  }
+});
+});
 
 module.exports.handler = serverless(app);
 
 //environment variables can be accessed from the code but are not in the code e.g. for password not to be hardcoded.
+
+// go to lambda and set environment variables
