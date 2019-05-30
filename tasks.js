@@ -7,7 +7,7 @@ const app = express(); // get a new express application
 const itinerary = [
   {
     "id": 1,
-    "date": 06 / 08 / 2019,
+    "date": "06 / 08 / 2019",
     "title": "Theatre Tickets",
     "price": 80,
     "completed": true
@@ -15,7 +15,7 @@ const itinerary = [
 
   {
     "id": 2,
-    "date": 07 / 08 / 2019,
+    "date": "07 / 08 / 2019",
     "title": "Hotel",
     "price": 75,
     "completed": false
