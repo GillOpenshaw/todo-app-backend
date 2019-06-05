@@ -6,11 +6,19 @@ provider:
 functions:
   tasks:
     handler: tasks.handler
+    environment:
+      DB_HOST: ${opt:DB_HOST}
+      DB_USER: ${opt:DB_USERNAME}
+      DB_PASSWORD: ${opt:DB_PASSWORD}
     events:
       - http:
          path: tasks
          method: get
          cors: true
+      - http:
+         path: tasks
+         method: post
+         cors: true   
       - http:
          path: tasks/{id}  # add a parameter to the end to select the id to e.g. 3 Parameter called id
          method: delete  # will delete from the database

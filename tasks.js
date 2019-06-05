@@ -31,6 +31,24 @@ app.get("/tasks", function (request, response) {
   });
 }); // when called will receive object about request and object about response
 
+// app.post("/tasks", function(request, response) {
+  
+//   const taskToBeSaved = request.body;
+
+//   connection.query("INSERT INTO Tasks SET ?", taskToBeSaved, function (error, results, fields) {
+//     if (error) {
+//       console.log("Error saving new task", error);
+//       response.status(500).json ({
+//         error: error
+//       });
+//     } else {
+//       response.json({
+//         taskId: results.insertId
+//       });
+//     }
+//   });
+// });
+
 // access id with request.params.id linked with yml file
 app.delete("/tasks/:id", function (request, response) {
   const taskId = request.params.id;
