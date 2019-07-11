@@ -20,7 +20,7 @@ const connection = mysql.createConnection({
 
 
 app.get("/tasks", function (request, response) {
-let queryToExecute = "SELECT * FROM Tasks";
+  let queryToExecute = "SELECT * FROM Tasks";
   connection.query(queryToExecute, function (err, result, fields) { //error result fields
     if (err !== null) { // Response 200 is ok, all good
       console.log("Error fetching tasks", err);
@@ -35,21 +35,29 @@ let queryToExecute = "SELECT * FROM Tasks";
   });
 }); // when called will receive object about request and object about response
 
-app.post("/tasks", function(request, response) {
-  
-  const taskToBeSaved = request.body;
-  connection.query("INSERT INTO Tasks SET ?", taskToBeSaved, function (error, results, fields) {
-    if (error) {
-      console.log("Error saving new task", error);
-      response.send(500);
+app.post("/tasks", function (request, response) {
+
+  const description = request.body.task.description;
+  const userID = request.body.task.userID;
+
+  const query = "INSERT INTO Tasks (description, completed, date, price, userID) VALUES (?, false, ?, ?, ?)";
+
+  connection.query(query, [description, userID], function (err, queryResponse) {
+    if (err) {
+      console.log("Error saving new task", err);
+      response.status(500).send({ error: err });
     } else {
-      response.json({
-        taskId: results.insertId
+      const id = queryResponse.insertId;
+      response.status(201).json({
+        Description: description,
+        UserId: userID,
+        Completed: 0,
+        TaskId: id,
+        TaskPrice: price,
+        TaskDate: date
       });
     }
   });
-
-  
 });
 
 // access id with request.params.id linked with yml file
@@ -58,13 +66,13 @@ app.delete("/tasks/:id", function (request, response) {
   console.log(taskId);
   // sanitise user input with the taskId
   connection.query("DELETE FROM Tasks WHERE taskId =  ?", [taskId], function (err, result, fields) {
-    if (err !== null) { 
+    if (err !== null) {
       console.log("Something wrong deleting tasks", err);
       response.send(500);
     } else {
-    response.send("Item Deleted")
-  }
-});
+      response.send("Item Deleted")
+    }
+  });
 });
 
 module.exports.handler = serverless(app);
