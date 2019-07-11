@@ -1,8 +1,11 @@
 const express = require("express");
 const serverless = require("serverless-http");
+const app = express();
+const cors = require('cors');
 const mysql = require("mysql"); // connect to database
 
-const app = express(); // get a new express application
+app.use(cors());
+app.use(express.json()); // get a new express application
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST, // from RDS
@@ -17,7 +20,8 @@ const connection = mysql.createConnection({
 
 
 app.get("/tasks", function (request, response) {
-  connection.query("SELECT * FROM Tasks", function (err, result, fields) { //error result fields
+let queryToExecute = "SELECT * FROM Tasks";
+  connection.query(queryToExecute, function (err, result, fields) { //error result fields
     if (err !== null) { // Response 200 is ok, all good
       console.log("Error fetching tasks", err);
       // Respond to end client with suitable response
@@ -31,30 +35,29 @@ app.get("/tasks", function (request, response) {
   });
 }); // when called will receive object about request and object about response
 
-// app.post("/tasks", function(request, response) {
+app.post("/tasks", function(request, response) {
   
-//   const taskToBeSaved = request.body;
+  const taskToBeSaved = request.body;
+  connection.query("INSERT INTO Tasks SET ?", taskToBeSaved, function (error, results, fields) {
+    if (error) {
+      console.log("Error saving new task", error);
+      response.send(500);
+    } else {
+      response.json({
+        taskId: results.insertId
+      });
+    }
+  });
 
-//   connection.query("INSERT INTO Tasks SET ?", taskToBeSaved, function (error, results, fields) {
-//     if (error) {
-//       console.log("Error saving new task", error);
-//       response.status(500).json ({
-//         error: error
-//       });
-//     } else {
-//       response.json({
-//         taskId: results.insertId
-//       });
-//     }
-//   });
-// });
+  
+});
 
 // access id with request.params.id linked with yml file
 app.delete("/tasks/:id", function (request, response) {
   const taskId = request.params.id;
   console.log(taskId);
   // sanitise user input with the taskId
-  connection.query("DELETE FROM Tasks WHERE TaskId =  ?", [taskId], function (err, result, fields) {
+  connection.query("DELETE FROM Tasks WHERE taskId =  ?", [taskId], function (err, result, fields) {
     if (err !== null) { 
       console.log("Something wrong deleting tasks", err);
       response.send(500);
